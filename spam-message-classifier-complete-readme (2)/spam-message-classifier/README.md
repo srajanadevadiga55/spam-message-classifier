@@ -1,148 +1,148 @@
-# Spam Message Classifier
+# Spam Message Classifier Using Machine Learning
 
-A Python Natural Language Processing (NLP) project that classifies SMS messages as **spam** or **ham (likely legitimate)**. It compares Multinomial Naive Bayes and Logistic Regression, evaluates them on a held-out test set, saves a reusable model pipeline, and supports interactive message predictions.
+## 1. Project Overview
 
-## Project objectives
+This project uses Machine Learning and Natural Language Processing (NLP) to classify SMS messages as **Spam** or **Ham (legitimate message)**.
 
-- Prepare and clean an SMS text dataset.
+It compares two machine learning algorithms, Multinomial Naive Bayes and Logistic Regression, using TF-IDF text vectorization. The models are evaluated using accuracy, precision, recall, F1-score, and a confusion matrix.
+
+## 2. Objectives
+
+- Clean and preprocess SMS text data.
 - Convert text into numerical features using TF-IDF.
-- Train and compare two machine-learning classifiers.
-- Evaluate results using accuracy, spam precision, spam recall, spam F1-score, and a confusion matrix.
-- Test new messages entered by the user.
-- Save reproducible outputs for review and GitHub submission.
+- Train and compare two machine learning models.
+- Evaluate model performance using standard classification metrics.
+- Predict whether a new SMS message is spam or legitimate.
+- Save the trained model pipeline for reuse.
 
-## Project structure
+## 3. Technologies Used
+
+- Python
+- Pandas
+- Scikit-learn
+- TF-IDF Vectorization
+- Multinomial Naive Bayes
+- Logistic Regression
+- Matplotlib and Seaborn
+- Joblib
+
+## 4. Dataset
+
+The project uses a publicly available SMS Spam Collection dataset containing labeled SMS messages.
+
+**Dataset source:** https://raw.githubusercontent.com/justmarkham/pycon-2016-tutorial/master/data/sms.tsv
+
+The labels are:
+- **Spam:** Unwanted or potentially fraudulent messages.
+- **Ham:** Legitimate messages.
+
+The script downloads the dataset automatically if it is not available locally. An internet connection is required for the initial download.
+
+## 5. Project Workflow
+
+1. Load the SMS dataset.
+2. Clean the text and remove invalid or duplicate records.
+3. Split the dataset into training and testing sets.
+4. Convert text into TF-IDF features within each model pipeline.
+5. Train Multinomial Naive Bayes and Logistic Regression.
+6. Evaluate and compare model performance.
+7. Save the selected trained pipeline using Joblib.
+8. Predict spam or ham for custom user-entered messages.
+
+The evaluation uses a stratified 80/20 train-test split. The vectorizer is fitted on training data to avoid test-data leakage.
+
+## 6. Model Performance
+
+| Model | Accuracy | Spam Precision | Spam Recall | Spam F1-score |
+|---|---:|---:|---:|---:|
+| Multinomial Naive Bayes | 96.71% | 100.00% | 74.05% | 85.09% |
+| Logistic Regression | 95.65% | 97.78% | 67.18% | 79.64% |
+
+**Best-performing model:** Multinomial Naive Bayes achieved the highest scores across all four listed metrics in this evaluation.
+
+Spam precision measures how often messages predicted as spam were actually spam. Spam recall measures how many actual spam messages were detected.
+
+## 7. Confusion Matrix
+
+For the selected Multinomial Naive Bayes model:
+
+- True Negatives (TN): 903
+- False Positives (FP): 0
+- False Negatives (FN): 34
+- True Positives (TP): 97
+
+The model correctly classified 903 legitimate messages and 97 spam messages in the test set. It incorrectly marked zero legitimate messages as spam, while 34 spam messages were classified as legitimate.
+
+See `outputs/confusion_matrix.png` for the visualization.
+
+## 8. Sample Predictions
+
+| Input Message | Expected/Observed Category |
+|---|---|
+| Congratulations! You have won a free prize. Click here now! | Spam |
+| Hey, are we meeting for lunch today? | Ham |
+
+These are example messages tested interactively. The output shown by your actual program should be used as the final evidence.
+
+## 9. Project Structure
 
 ```text
 spam-message-classifier/
 ├── spam_classifier.py
 ├── requirements.txt
 ├── README.md
-├── TASK_INSTRUCTIONS.md
 ├── REPORT_TEMPLATE.md
-├── .gitignore
+├── TASK_INSTRUCTIONS.md
+├── spam_classifier_pipeline.joblib
 └── outputs/
-    ├── classification_metrics.csv       # generated when the script runs
-    ├── confusion_matrix.png             # generated when the script runs
-    └── sample_prediction_logs.csv       # generated when the script runs
+    ├── classification_metrics.csv
+    ├── confusion_matrix.png
+    └── sample_prediction_logs.csv
 ```
 
-The trained model pipeline (`spam_classifier_pipeline.joblib`) and downloaded dataset (`SMSSpamCollection.tsv`) are created when the program runs; they are not expected to exist before the first run.
+## 10. How to Run the Project
 
-## Technologies used
+**Step 1: Install Python**
 
-- Python
-- Pandas
-- scikit-learn
-- TF-IDF text vectorization
-- Multinomial Naive Bayes
-- Logistic Regression
-- Matplotlib and Seaborn
-- Joblib
-
-## Dataset
-
-The script downloads the public SMS dataset from:
-
-https://raw.githubusercontent.com/justmarkham/pycon-2016-tutorial/master/data/sms.tsv
-
-The dataset has a message label (`ham` or `spam`) and message text. The script removes rows with missing labels or messages, duplicate rows, unsupported labels, and empty messages. An internet connection is required for the first run.
-
-Please retain the dataset source link when reusing this dataset and check the source repository for applicable terms.
-
-## Setup and run
-
-### 1. Install Python
-
-Use a supported Python 3 version and confirm that it is available in your terminal:
+Install Python 3 and check it in your terminal:
 
 ```bash
 python --version
 ```
 
-### 2. Open this folder in VS Code
+**Step 2: Install dependencies**
 
-Open the `spam-message-classifier` folder, then choose **Terminal → New Terminal**.
-
-### 3. Install dependencies
+Open a terminal in the project folder and run:
 
 ```bash
 python -m pip install -r requirements.txt
 ```
 
-### 4. Run the classifier
+**Step 3: Run the classifier**
 
 ```bash
 python spam_classifier.py
 ```
 
-The first run downloads the dataset, trains both models, prints evaluation results, creates output files, saves the selected pipeline, and prompts you to enter custom messages. Type `quit` to exit interactive testing.
+**Step 4: Test custom messages**
 
-## Model evaluation
+Enter messages when prompted. Try both a suspicious promotional message and an ordinary personal message. Type `quit` to exit.
 
-The script uses an 80/20 stratified train/test split with a fixed random seed. Each TF-IDF vectorizer is part of its model pipeline, so its vocabulary is fitted only on training messages. The test set is held out for evaluation.
+The program trains and evaluates the models, creates output files, and saves the selected model pipeline.
 
-The model selection rule prioritizes **spam precision**, using spam F1-score as a tie-breaker. This is intended to reduce legitimate messages incorrectly marked as spam. It does not guarantee that every message will be classified correctly.
+## 11. Limitations
 
-### Actual results
+- The dataset mainly contains SMS messages and may not represent emails or modern online scams.
+- The model can make incorrect predictions.
+- High spam precision on this test set does not guarantee the same performance on new messages.
+- The project is intended for learning and demonstration, not as a production-ready spam filter.
 
-**Run `python spam_classifier.py` first.** The program writes the measured scores to `outputs/classification_metrics.csv`. Copy those real values into this table before final submission; do not invent results.
+## 12. Conclusion
 
-| Model | Accuracy | Spam precision | Spam recall | Spam F1-score |
-|---|---:|---:|---:|---:|
-| Multinomial Naive Bayes | To be filled from run | To be filled from run | To be filled from run | To be filled from run |
-| Logistic Regression | To be filled from run | To be filled from run | To be filled from run | To be filled from run |
+This project demonstrates how machine learning and NLP can be used to classify SMS messages. Both Multinomial Naive Bayes and Logistic Regression were evaluated, with Multinomial Naive Bayes performing better on the reported test metrics. The saved pipeline enables predictions on new messages.
 
-### Evaluation outputs
+## 13. Author
 
-After a successful run, the following files are generated:
+**Srajana Devadiga**
 
-- `outputs/classification_metrics.csv` — comparison of both models.
-- `outputs/confusion_matrix.png` — confusion matrix for the selected model.
-- `outputs/sample_prediction_logs.csv` — a small sample of held-out test predictions.
-- `spam_classifier_pipeline.joblib` — saved fitted TF-IDF and classifier pipeline.
-
-### Metrics explained
-
-- **Accuracy:** fraction of all test messages classified correctly.
-- **Spam precision:** of the messages predicted as spam, the fraction that actually are spam.
-- **Spam recall:** of all actual spam messages, the fraction detected by the model.
-- **Spam F1-score:** harmonic mean of spam precision and spam recall.
-- **Confusion matrix:** shows correct and incorrect predictions for each class.
-
-## Sample interactive testing
-
-When prompted with `Message:`, test at least two messages of your own. For example:
-
-1. `Congratulations! You have won a prize. Call now to claim.`
-2. `Hey, are we still meeting at 5 pm?`
-
-Record the actual predictions from your run in your report or screenshots. Predictions can vary by training data and model.
-
-## Results and interpretation
-
-After running the project, discuss:
-1. Which model achieved the highest spam precision?
-2. What were its spam recall and F1-score?
-3. How many legitimate messages were incorrectly classified as spam, according to the confusion matrix?
-4. What limitations did you notice?
-
-Use measured results rather than assumptions. High precision is useful for reducing false positives, but the project should not be described as perfect or production-ready.
-
-## Limitations
-
-- This is a learning project, not a production spam filter.
-- The dataset contains SMS messages; performance may not transfer to emails, social media posts, or newly emerging scams.
-- A classifier can make mistakes, so its predictions should not be treated as guarantees.
-
-## Submission checklist
-
-- [ ] Run the script successfully.
-- [ ] Review `outputs/classification_metrics.csv`.
-- [ ] Review and include `outputs/confusion_matrix.png`.
-- [ ] Review `outputs/sample_prediction_logs.csv`.
-- [ ] Test at least two custom messages and capture a screenshot of the terminal.
-- [ ] Fill the metrics table and results discussion above using the real output.
-- [ ] Complete `REPORT_TEMPLATE.md` using the measured results.
-- [ ] Upload the Python script, README, requirements, instructions, report, and generated evidence to GitHub.
-- [ ] Check that the repository opens correctly and the README is displayed on the repository home page.
+GitHub: https://github.com/srajanadevadiga55/spam-message-classifier
